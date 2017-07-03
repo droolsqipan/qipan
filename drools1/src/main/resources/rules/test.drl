@@ -32,3 +32,22 @@ rule "chushi4"
      	m.setMaxJ(m.getEndJ());
      	m.setMinJ(m.getStartJ());
 end
+
+rule "ju1"
+    when
+        m : DroolFuZhu(name=="車",maxI==minI)
+    then
+     		for(int j=m.getMinJ()+1;j<m.getMaxJ();j++)
+			{
+				if(m.getQiZi()[m.getMaxI()][j]!=null)//如果中间有棋子
+				{
+					m.setCanMove(false);//不可以走棋
+					System.out.println("111");
+				}
+			}
+end
+
+
+
+
+

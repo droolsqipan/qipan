@@ -13,6 +13,8 @@ public class DroolFuZhu {
 	public int minI;
 	public int maxJ;
 	public int minJ;
+	public boolean canMove;
+	public String fangfaming;
 	
 	public int getStartI() {
 		return startI;
@@ -74,11 +76,23 @@ public class DroolFuZhu {
 	public void setMinJ(int minJ) {
 		this.minJ = minJ;
 	}
+	public boolean isCanMove() {
+		return canMove;
+	}
+	public void setCanMove(boolean canMove) {
+		this.canMove = canMove;
+	}
 	@Override
 	public String toString() {
 		return "DroolFuZhu [startI=" + startI + ", startJ=" + startJ + ", endI=" + endI + ", endJ=" + endJ + ", name="
 				+ name + ", qiZi=" + Arrays.toString(qiZi) + ", maxI=" + maxI + ", minI=" + minI + ", maxJ=" + maxJ
-				+ ", minJ=" + minJ + "]";
+				+ ", minJ=" + minJ + ", canMove=" + canMove + "]";
+	}
+	public String getFangfaming() {
+		return fangfaming;
+	}
+	public void setFangfaming(String fangfaming) {
+		this.fangfaming = fangfaming;
 	}
 	
 	
