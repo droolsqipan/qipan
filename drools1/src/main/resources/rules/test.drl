@@ -33,6 +33,7 @@ rule "chushi4"
      	m.setMinJ(m.getStartJ());
 end
 
+//如果在一条横线上
 rule "ju1"
     when
         m : DroolFuZhu(name=="車",maxI==minI)
@@ -42,12 +43,170 @@ rule "ju1"
 				if(m.getQiZi()[m.getMaxI()][j]!=null)//如果中间有棋子
 				{
 					m.setCanMove(false);//不可以走棋
-					System.out.println("111");
 				}
 			}
 end
 
+//如果在一条竖线上
+rule "ju2"
+    when
+        m : DroolFuZhu(name=="車",maxJ==minJ)
+    then
+     		for(int j=m.getMinJ()+1;j<m.getMaxJ();j++)
+			{
+				if(m.getQiZi()[j][m.getMaxJ()]!=null)//如果中间有棋子
+				{
+					m.setCanMove(false);//不可以走棋
+				}
+			}
+end
 
+//如果不在同一条线上
+rule "ju3"
+    when
+        m : DroolFuZhu(name=="車",maxI!=minI,maxJ!=minJ)
+    then
+     	m.setCanMove(false);//不可以走棋	
+end
 
+//如果是竖着的"日"字,如果是从下向上走
+rule "ma1"
+    when
+        m : DroolFuZhu(name=="馬",(maxI-minI)==1,(maxJ-minJ)==2,startJ>endJ)
+    then
+				if(m.getQiZi()[m.getStartI()][m.getStartJ()-1]!=null)//如果中间有棋子
+				{
+					m.setCanMove(false);//不可以走棋
+				}
+end
 
+//如果是竖着的"日"字,如果是从上往下走
+rule "ma2"
+    when
+        m : DroolFuZhu(name=="馬",(maxI-minI)==1,(maxJ-minJ)==2,startJ<endJ)
+    then
+				if(m.getQiZi()[m.getStartI()][m.getStartJ()+1]!=null)//如果中间有棋子
+				{
+					m.setCanMove(false);//不可以走棋
+				}
+end
 
+//如果是横着的"日",如果是从右往左走
+rule "ma3"
+    when
+        m : DroolFuZhu(name=="馬",(maxI-minI)==2,(maxJ-minJ)==1,startI>endI)
+    then
+				if(m.getQiZi()[m.getStartI()-1][m.getStartJ()]!=null)//如果中间有棋子
+				{
+					m.setCanMove(false);//不可以走棋
+				}
+end
+
+//如果是横着的"日",如果是从左往右走
+rule "ma4"
+    when
+        m : DroolFuZhu(name=="馬",(maxI-minI)==2,(maxJ-minJ)==1,startI>endI)
+    then
+				if(m.getQiZi()[m.getStartI()+1][m.getStartJ()]!=null)//如果中间有棋子
+				{
+					m.setCanMove(false);//不可以走棋
+				}
+end
+
+//如果不时"日"字
+rule "ma5"
+    when
+        m : DroolFuZhu(name=="馬")
+    then
+     if(!(((m.getMaxI()-m.getMinI())==2&&(m.getMinJ()-m.getMinJ())==1)||((m.getMaxI()-m.getMinI())==1&&(m.getMinJ()-m.getMinJ())==2)))//如果不时"日"字
+		{
+			m.setCanMove(false);//不可以走棋
+		}
+					
+end
+
+//如果是"田"字,过河了
+rule "xiang11"
+    when
+        m : DroolFuZhu(name=="相",(maxI-minI)==2,(maxJ-minJ)==2,endJ>4)
+    then
+				m.setCanMove(false);//不可以走棋
+end
+
+//如果是"田"字,中间有棋
+rule "xiang12"
+    when
+        m : DroolFuZhu(name=="相",(maxI-minI)==2,(maxJ-minJ)==2)
+    then
+    		if(m.getQiZi()[(m.getMaxI()+m.getMinI())/2][(m.getMinJ()+m.getMaxJ())/2]!=null)//如果"田"字中间有棋子
+			{
+					m.setCanMove(false);//不可以走棋
+			}
+				
+end
+
+//如果不是"田"字
+rule "xiang13"
+    when
+        m : DroolFuZhu(name=="相" &&((maxI-minI)!=2||(maxJ-minJ)!=2))
+    then
+					m.setCanMove(false);//不可以走棋
+end
+
+//如果是"田"字,过河了
+rule "xiang21"
+    when
+        m : DroolFuZhu(name=="象",(maxI-minI)==2,(maxJ-minJ)==2,endJ<5)
+    then
+				m.setCanMove(false);//不可以走棋
+end
+
+//如果是"田"字,中间有棋
+rule "xiang22"
+    when
+        m : DroolFuZhu(name=="象",(maxI-minI)==2,(maxJ-minJ)==2)
+    then
+    		if(m.getQiZi()[(m.getMaxI()+m.getMinI())/2][(m.getMinJ()+m.getMaxJ())/2]!=null)//如果"田"字中间有棋子
+			{
+					m.setCanMove(false);//不可以走棋
+			}
+end
+
+//如果不是"田"字
+rule "xiang23"
+    when
+        m : DroolFuZhu(name=="象" &&((maxI-minI)!=2||(maxJ-minJ)!=2))
+    then
+					m.setCanMove(false);//不可以走棋
+end
+
+//如果是小斜线//如果是下方的士
+rule "shi1"
+    when
+        m : DroolFuZhu((name=="士"||name=="仕") && (maxI-minI)==1 && (maxJ-minJ)==1 && startJ>4 && endJ<7)
+    then
+				m.setCanMove(false);//不可以走棋
+end
+
+//如果是上方的士
+rule "shi2"
+    when
+        m : DroolFuZhu((name=="士"||name=="仕") && (maxI-minI)==1 && (maxJ-minJ)==1 && startJ<4 && endJ<2)
+    then
+				m.setCanMove(false);//不可以走棋
+end
+//左右出界
+rule "shi3"
+    when
+        m : DroolFuZhu((name=="士"||name=="仕") && (maxI-minI)==1 && (maxJ-minJ)==1 && (endI>5||endI<3))//如果左右越界，则不可以走
+    then
+				m.setCanMove(false);//不可以走棋
+end
+
+//如果不时小斜线
+rule "shi4"
+    when
+        m : DroolFuZhu((name=="士"||name=="仕")&&((maxI-minI)!=1||(maxJ-minJ)!=1) )//如果左右越界，则不可以走
+    then
+				m.setCanMove(false);//不可以走棋
+end
