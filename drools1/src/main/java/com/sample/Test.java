@@ -1,6 +1,7 @@
 package com.sample;
 
 import java.awt.Color;
+
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -13,6 +14,7 @@ import org.drools.builder.ResourceType;
 import org.drools.definition.KnowledgePackage;
 import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
+import org.drools.runtime.StatelessKnowledgeSession;
 
 public class Test {
 
@@ -31,12 +33,13 @@ public class Test {
 	        Collection<KnowledgePackage> packages = builder.getKnowledgePackages();  
 	        KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();  
 	        kbase.addKnowledgePackages(packages);  
-	        StatefulKnowledgeSession session = kbase.newStatefulKnowledgeSession(); 
+	        StatefulKnowledgeSession session = kbase.newStatefulKnowledgeSession();
+	         StatelessKnowledgeSession sessionkib;
 	        DroolFuZhu dfz=new DroolFuZhu();
-	        dfz.setStartI(0);
-	        dfz.setStartJ(1);
-	        dfz.setEndI(3);
-	        dfz.setEndJ(4);
+	        dfz.setStartI(4);
+	        dfz.setStartJ(0);
+	        dfz.setEndI(4);
+	        dfz.setEndJ(1);
 //	        session.insert(dfz);  
 //            session.fireAllRules();  
             //System.out.println(dfz);
@@ -82,16 +85,16 @@ public class Test {
 //            車的变量1 -- 0 -- 4 -- 0 -- 
 //            車的变量3 -- 0 -- 7 -- 0 -- 
 //            車的变量0 -- 0 -- 1 -- 0 -- 
-            dfz.setMaxI(0);
-            dfz.setMinI(0);
-            dfz.setMaxJ(4);
-            dfz.setMinJ(0);
             dfz.setQiZi(qiZi);
             dfz.setCanMove(true);
-            dfz.setName("車");
+            dfz.setName("帥");
+           
            //System.out.println(qiZi[0][1]);
-            session.insert(dfz);  
-            session.fireAllRules();
+//            session.insert(dfz);  
+//            session.fireAllRules();
+            sessionkib=(StatelessKnowledgeSession) kbase.newStatelessKnowledgeSession();
+			sessionkib.execute(dfz);
+            System.out.println(dfz.toString());
             System.out.println(dfz.isCanMove());
 
 	}

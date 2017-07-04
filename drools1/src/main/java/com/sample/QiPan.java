@@ -1,6 +1,19 @@
 ﻿package com.sample;
 import java.awt.*;import java.awt.event.*;
+
 import javax.swing.*;import javax.swing.event.*;
+
+import org.drools.KnowledgeBase;
+import org.drools.KnowledgeBaseFactory;
+import org.drools.builder.KnowledgeBuilder;
+import org.drools.builder.KnowledgeBuilderErrors;
+import org.drools.builder.KnowledgeBuilderFactory;
+import org.drools.builder.ResourceType;
+import org.drools.definition.KnowledgePackage;
+import org.drools.io.ResourceFactory;
+import org.drools.runtime.StatefulKnowledgeSession;
+import org.drools.runtime.StatelessKnowledgeSession;
+
 import java.util.*;
 public class QiPan extends JPanel implements MouseListener{
 	private int width;//棋盘两线之间的距离
@@ -16,14 +29,38 @@ public class QiPan extends JPanel implements MouseListener{
 	public QiZi qiZi[][];//棋子的数组
 	XiangQi xq=null;//声明XiangQi的引用
 	GuiZe guiZe;//声明GuiZe的引用
+	public  KnowledgeBuilder builder;
+	public StatefulKnowledgeSession session;
+	public StatelessKnowledgeSession sessionkib;
+	public  KnowledgeBase kbase ;
+	public DroolFuZhu dfz=new DroolFuZhu();
 	public QiPan(QiZi qiZi[][],int width,XiangQi xq){
 		this.xq=xq;
 		this.qiZi=qiZi;
 		this.width=width;
-		guiZe=new GuiZe(qiZi);//开始进行规则的调用
+		//guiZe=new GuiZe(qiZi);//开始进行规则的调用
+		dfz.setQiZi(qiZi);
 		this.addMouseListener(this);//为棋盘添加鼠标事件监听器
 		this.setBounds(0,0,700,700);//设置棋盘的大小
 		this.setLayout(null);//设为空布局
+		
+		//规则的调用布局
+		  builder = KnowledgeBuilderFactory.newKnowledgeBuilder();  
+	        builder.add(ResourceFactory.newClassPathResource("rules/test.drl"), ResourceType.DRL);  
+	  
+	        if (builder.hasErrors()) {  
+	            System.out.println("规则中存在错误，错误消息如下：");  
+	            KnowledgeBuilderErrors kbuidlerErrors = builder.getErrors();  
+	            for (Iterator iter = kbuidlerErrors.iterator(); iter.hasNext();) {  
+	                System.out.println(iter.next());  
+	            }  
+	            return;  
+	        }
+	        Collection<KnowledgePackage> packages = builder.getKnowledgePackages();  
+	         kbase = KnowledgeBaseFactory.newKnowledgeBase();  
+	        kbase.addKnowledgePackages(packages);  
+	         session = kbase.newStatefulKnowledgeSession(); 
+	         
 	}
 	public void paint(Graphics g1){
 		Graphics2D g=(Graphics2D)g1;//获得Graphics2D对象
@@ -87,6 +124,7 @@ public class QiPan extends JPanel implements MouseListener{
 		g.setColor(c);//还原画笔颜色
 	}
 	public void mouseClicked(MouseEvent e){
+		
 		if(this.xq.caiPan==true){//判断是否轮到该玩家走棋
 			int i=-1,j=-1;
 			int[] pos=getPos(e);
@@ -109,7 +147,43 @@ public class QiPan extends JPanel implements MouseListener{
 							endJ=j;
 							String name=qiZi[startI][startJ].getName();//获得该棋子的名字
 							//看是否可以移动
-							boolean canMove=guiZe.canMove(startI,startJ,endI,endJ,name);
+							DroolFuZhu dfz=new DroolFuZhu();
+							dfz.setQiZi(this.qiZi);
+							dfz.setStartI(startI);
+							dfz.setStartJ(startJ);
+							dfz.setEndI(endI);
+							dfz.setEndJ(endJ);
+							dfz.setName(name);
+							dfz.setCanMove(true);
+							
+							if(startI>=endI)//确定其实坐标的大小关系
+							{
+								dfz.setMaxI(startI);
+								dfz.setMinI(endI);
+							}
+							else//确定maxI和minI
+							{
+								dfz.setMaxI(endI);
+								dfz.setMinI(startI);
+							}
+							if(startJ>=endJ)//确定endJ和startJ
+							{
+								dfz.setMaxJ(startJ);
+								dfz.setMinJ(endJ);
+							}
+							else
+							{
+								dfz.setMaxJ(endJ);
+								dfz.setMinJ(startJ);
+							}
+//							session.insert(dfz);  
+//				            session.fireAllRules();
+							sessionkib=(StatelessKnowledgeSession) kbase.newStatelessKnowledgeSession();
+							sessionkib.execute(dfz);
+							boolean canMove=dfz.isCanMove();
+							System.out.println(dfz.toString());
+							System.out.println(dfz.name+"   该处有棋 maxI-minI=  "+(dfz.maxI-dfz.minI)+"  maxJ-minJ="+(dfz.maxJ-dfz.minJ)+canMove);
+							//session.dispose();
 							if(canMove)//如果可以移动
 							{
 								try{//将该移动信息发送给对方
@@ -133,7 +207,44 @@ public class QiPan extends JPanel implements MouseListener{
 						endI=i;
 						endJ=j;//保存终点
 						String name=qiZi[startI][startJ].getName();//获得该棋的名字
-						boolean canMove=guiZe.canMove(startI,startJ,endI,endJ,name);//判断是否可走
+						DroolFuZhu dfz1=new DroolFuZhu();
+						dfz1.setQiZi(this.qiZi);
+						dfz1.setStartI(startI);
+						dfz1.setStartJ(startJ);
+						dfz1.setEndI(endI);
+						dfz1.setEndJ(endJ);
+						dfz1.setName(name);
+						dfz1.setCanMove(true);
+//						 session = kbase.newStatefulKnowledgeSession();
+//						session.insert(dfz);  
+//			            session.fireAllRules();
+						
+						if(startI>=endI)//确定其实坐标的大小关系
+						{
+							dfz.setMaxI(startI);
+							dfz.setMinI(endI);
+						}
+						else//确定maxI和minI
+						{
+							dfz.setMaxI(endI);
+							dfz.setMinI(startI);
+						}
+						if(startJ>=endJ)//确定endJ和startJ
+						{
+							dfz.setMaxJ(startJ);
+							dfz.setMinJ(endJ);
+						}
+						else
+						{
+							dfz.setMaxJ(endJ);
+							dfz.setMinJ(startJ);
+						}
+						sessionkib=(StatelessKnowledgeSession) kbase.newStatelessKnowledgeSession();
+						sessionkib.execute(dfz1);
+						boolean canMove=dfz1.isCanMove();
+						System.out.println(dfz1.toString());
+						System.out.println(dfz1.name+"  该处没棋 maxI-minI=  "+(dfz1.maxI-dfz1.minI)+"  maxJ-minJ=  "+(dfz1.maxJ-dfz1.minJ)+canMove);
+						//session.dispose();
 						if(canMove){//如果可以移动
 							this.noQiZi();
 						}

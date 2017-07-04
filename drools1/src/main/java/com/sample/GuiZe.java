@@ -77,6 +77,7 @@ public class GuiZe
 	}
 	public void ju(int maxI,int minI,int maxJ,int minJ)
 	{//对"車"的处理方法
+		//System.out.println("車的变量"+maxI+" -- "+minI+" -- "+maxJ+" -- "+minJ+" -- ");
 		if(maxI==minI)//如果在一条横线上
 		{
 			for(j=minJ+1;j<maxJ;j++)
@@ -118,7 +119,7 @@ public class GuiZe
 				}	
 			}
 			else
-			{//如果是从上往下走
+			{//如果是从 下走
 				if(qiZi[startI][startJ+1]!=null)//如果马腿处有棋子
 				{
 					canMove=false;//不可以走
