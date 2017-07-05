@@ -156,33 +156,33 @@ public class QiPan extends JPanel implements MouseListener{
 							dfz.setName(name);
 							dfz.setCanMove(true);
 							
-							if(startI>=endI)//确定其实坐标的大小关系
-							{
-								dfz.setMaxI(startI);
-								dfz.setMinI(endI);
-							}
-							else//确定maxI和minI
-							{
-								dfz.setMaxI(endI);
-								dfz.setMinI(startI);
-							}
-							if(startJ>=endJ)//确定endJ和startJ
-							{
-								dfz.setMaxJ(startJ);
-								dfz.setMinJ(endJ);
-							}
-							else
-							{
-								dfz.setMaxJ(endJ);
-								dfz.setMinJ(startJ);
-							}
+//							if(startI>=endI)//确定其实坐标的大小关系
+//							{
+//								dfz.setMaxI(startI);
+//								dfz.setMinI(endI);
+//							}
+//							else//确定maxI和minI
+//							{
+//								dfz.setMaxI(endI);
+//								dfz.setMinI(startI);
+//							}
+//							if(startJ>=endJ)//确定endJ和startJ
+//							{
+//								dfz.setMaxJ(startJ);
+//								dfz.setMinJ(endJ);
+//							}
+//							else
+//							{
+//								dfz.setMaxJ(endJ);
+//								dfz.setMinJ(startJ);
+//							}
 //							session.insert(dfz);  
 //				            session.fireAllRules();
 							sessionkib=(StatelessKnowledgeSession) kbase.newStatelessKnowledgeSession();
 							sessionkib.execute(dfz);
 							boolean canMove=dfz.isCanMove();
-							System.out.println(dfz.toString());
-							System.out.println(dfz.name+"   该处有棋 maxI-minI=  "+(dfz.maxI-dfz.minI)+"  maxJ-minJ="+(dfz.maxJ-dfz.minJ)+canMove);
+//							System.out.println(dfz.toString());
+//							System.out.println(dfz.name+"   该处有棋 maxI-minI=  "+(dfz.maxI-dfz.minI)+"  maxJ-minJ="+(dfz.maxJ-dfz.minJ)+canMove);
 							//session.dispose();
 							if(canMove)//如果可以移动
 							{
@@ -219,31 +219,31 @@ public class QiPan extends JPanel implements MouseListener{
 //						session.insert(dfz);  
 //			            session.fireAllRules();
 						
-						if(startI>=endI)//确定其实坐标的大小关系
-						{
-							dfz.setMaxI(startI);
-							dfz.setMinI(endI);
-						}
-						else//确定maxI和minI
-						{
-							dfz.setMaxI(endI);
-							dfz.setMinI(startI);
-						}
-						if(startJ>=endJ)//确定endJ和startJ
-						{
-							dfz.setMaxJ(startJ);
-							dfz.setMinJ(endJ);
-						}
-						else
-						{
-							dfz.setMaxJ(endJ);
-							dfz.setMinJ(startJ);
-						}
+//						if(startI>=endI)//确定其实坐标的大小关系
+//						{
+//							dfz.setMaxI(startI);
+//							dfz.setMinI(endI);
+//						}
+//						else//确定maxI和minI
+//						{
+//							dfz.setMaxI(endI);
+//							dfz.setMinI(startI);
+//						}
+//						if(startJ>=endJ)//确定endJ和startJ
+//						{
+//							dfz.setMaxJ(startJ);
+//							dfz.setMinJ(endJ);
+//						}
+//						else
+//						{
+//							dfz.setMaxJ(endJ);
+//							dfz.setMinJ(startJ);
+//						}
 						sessionkib=(StatelessKnowledgeSession) kbase.newStatelessKnowledgeSession();
 						sessionkib.execute(dfz1);
 						boolean canMove=dfz1.isCanMove();
-						System.out.println(dfz1.toString());
-						System.out.println(dfz1.name+"  该处没棋 maxI-minI=  "+(dfz1.maxI-dfz1.minI)+"  maxJ-minJ=  "+(dfz1.maxJ-dfz1.minJ)+canMove);
+//						System.out.println(dfz1.toString());
+//						System.out.println(dfz1.name+"  该处没棋 maxI-minI=  "+(dfz1.maxI-dfz1.minI)+"  maxJ-minJ=  "+(dfz1.maxJ-dfz1.minJ)+canMove);
 						//session.dispose();
 						if(canMove){//如果可以移动
 							this.noQiZi();
